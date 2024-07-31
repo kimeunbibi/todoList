@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -47,6 +49,23 @@ public class TodoController {
                 .collect(Collectors.toList());
         model.addAttribute("todos", todoDTOs);
         return "todos";
+    }
+
+    @GetMapping("todos/delete/{id}")
+    public String deleteTodo(@PathVariable("id") Long id) {
+        todoService.delete(id);
+        return "redirect:/todos";
+    }
+
+    @GetMapping("todos/complete/{id}")
+    public String completeTodo(@PathVariable("id") Long id) {
+        Optional<Todo> todoOptional = todoService.findById(id);
+        if(todoOptional.isPresent()) {
+            Todo todo = todoOptional.get();
+            todo.setCompleted(true);
+            todoService.save(todo);
+        }
+        return "redirect:/todos";
     }
 
     public static class TodoDTO {

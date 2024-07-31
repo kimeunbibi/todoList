@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>To-Do List</h1>
-<div th:if="${successMessage}" th:text="${successMessage}"></div>
+<div th:if="${successMessage}" th:text="${successMessage}" class="success-message"></div>
 <form action="/todos/add" method="post">
     <div>
         <label for="title">Title:</label>
@@ -20,6 +20,12 @@
         <label for="dueDate">Due Date:</label>
         <input type="datetime-local" id="dueDate" name="dueDate" required>
     </div>
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" name="categoryId" required>
+            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+        </select>
+    </div>
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <button type="submit">Add</button>
@@ -27,15 +33,23 @@
 </form>
 <ul>
     <li th:each="todo : ${todos}">
-        <span th:text="${todo.title}"></span>
-        <span th:text="${todo.priority}"></span>
-        <span th:text="${todo.dueDate}"></span>
-        <span th:text="${todo.completed ? 'Completed' : 'Incomplete'}"></span>
-        <span th:text="${todo.username}"></span>
-        <a th:href="@{/todos/delete/{id}(id=${todo.id})}">Delete</a>
-        <a th:href="@{/todos/complete/{id}(id=${todo.id})}">Complete</a>
+        <div>
+            <span th:text="${todo.title}"></span>
+            <span th:text="${todo.priority}"></span>
+            <span th:text="${todo.dueDate}"></span>
+            <span th:text="${todo.completed ? 'Completed' : 'Incomplete'}"></span>
+            <span th:text="${todo.username}"></span>
+            <span th:text="${todo.categoryName}"></span>
+        </div>
+        <div class="actions">
+            <a th:href="@{/todos/delete/{id}(id=${todo.id})}" class="fas fa-trash"></a>
+            <a th:href="@{/todos/complete/{id}(id=${todo.id})}" class="fas fa-check"></a>
+        </div>
     </li>
 </ul>
-<a href="/logout">Logout</a>
+<form action="/logout" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <button type="submit" class="logout">Logout</button>
+</form>
 </body>
 </html>

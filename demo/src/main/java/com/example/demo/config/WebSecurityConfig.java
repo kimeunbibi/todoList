@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import com.example.demo.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,10 +32,11 @@ public class WebSecurityConfig {
                         .defaultSuccessUrl("/todos", true)
                         .permitAll()
                 )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
-                        .permitAll()
-                )
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login?logout")
+                                .permitAll())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/h2-console/**")
                 )
@@ -44,19 +46,6 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        PasswordEncoder encoder = passwordEncoder();
-        UserDetails user = User.builder()
-                .username("user")
-                .password(encoder.encode("password"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
