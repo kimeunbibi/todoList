@@ -22,17 +22,21 @@ public class Todo {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Todo() {
 
     }
 
-    public Todo(String title, boolean completed, LocalDateTime dueDate, String priority, User user) {
+    public Todo(String title, boolean completed, LocalDateTime dueDate, String priority, User user, Category category) {
         this.title = title;
         this.completed = completed;
         this.dueDate = dueDate;
         this.priority = priority;
         this.user = user;
+        this.category = category;
     }
 
     public Long getId() {
@@ -81,5 +85,13 @@ public class Todo {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

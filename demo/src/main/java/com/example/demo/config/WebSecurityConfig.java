@@ -25,6 +25,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/register", "/login", "/css/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/categories/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -38,7 +39,7 @@ public class WebSecurityConfig {
                                 .logoutSuccessUrl("/login?logout")
                                 .permitAll())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
+                        .ignoringRequestMatchers("/h2-console/**", "/categories/**")
                 )
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
