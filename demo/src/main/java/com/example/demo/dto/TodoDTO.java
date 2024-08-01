@@ -1,5 +1,10 @@
 package com.example.demo.dto;
 
+import com.example.demo.model.Attachment;
+import com.example.demo.model.Comment;
+
+import java.util.List;
+
 public class TodoDTO {
     private Long id;
     private String title;
@@ -8,8 +13,11 @@ public class TodoDTO {
     private boolean completed;
     private String username;
     private String categoryName;
+    private List<Comment> comments;
+    private List<Attachment> attachments;
 
-    public TodoDTO(Long id, String title, String priority, String dueDate, boolean completed, String username, String categoryName) {
+
+    public TodoDTO(Long id, String title, String priority, String dueDate, boolean completed, String username, String categoryName, List<Comment> comments, List<Attachment> attachments) {
         this.id = id;
         this.title = title;
         this.priority = priority;
@@ -17,6 +25,8 @@ public class TodoDTO {
         this.completed = completed;
         this.username = username;
         this.categoryName = categoryName;
+        this.comments = comments;
+        this.attachments = attachments;
     }
 
     // Getters and setters
@@ -73,5 +83,21 @@ public class TodoDTO {
     }
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }

@@ -46,6 +46,41 @@
             <span th:text="${todo.username}"></span>
             <span th:text="${todo.categoryName}"></span>
         </div>
+
+        <div>
+            <!-- 댓글 출력 -->
+            <ul>
+                <li th:each="comment : ${todo.comments}">
+                    <span th:text="${comment.content}"></span>
+                    <span th:text="${comment.createdAt}"></span>
+                    <a th:href="@{/todos/{todoId}/comments/delete/{commentId}(todoId=${todo.id}, commentId=${comment.id})}">Delete</a>
+                </li>
+            </ul>
+
+            <!-- 첨부파일 출력 -->
+            <ul>
+                <li th:each="attachment : ${todo.attachments}">
+                    <!-- 파일 다운로드 링크 -->
+                    <a th:href="@{/todos/{todoId}/attachments/download/{attachmentId}(todoId=${todo.id}, attachmentId=${attachment.id})}"
+                       th:text="${attachment.fileName}">Download</a>
+                    <!-- 파일 삭제 링크 -->
+                    <a th:href="@{/todos/{todoId}/attachments/delete/{attachmentId}(todoId=${todo.id}, attachmentId=${attachment.id})}">Delete</a>
+                </li>
+            </ul>
+
+            <!-- 댓글 추가 폼 -->
+            <form action="#" th:action="@{/todos/{todoId}/comments/add(todoId=${todo.id})}" method="post">
+                <input type="text" name="content" placeholder="Add a comment" required>
+                <button type="submit">Add Comment</button>
+            </form>
+
+            <!-- 파일 첨부 폼 -->
+            <form action="#" th:action="@{/todos/{todoId}/attachments/add(todoId=${todo.id})}" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <button type="submit">Attach File</button>
+            </form>
+        </div>
+
         <div class="actions">
             <a th:href="@{/todos/delete/{id}(id=${todo.id})}" class="fas fa-trash">Delete</a> <!-- 삭제 버튼 -->
             <a th:href="@{/todos/complete/{id}(id=${todo.id})}" class="fas fa-check">Complete</a> <!-- 완료 버튼 -->

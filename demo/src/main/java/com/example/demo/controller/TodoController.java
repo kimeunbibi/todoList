@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.TodoDTO;
 import com.example.demo.model.Category;
+import com.example.demo.model.Comment;
+import com.example.demo.model.Attachment;
 import com.example.demo.model.Todo;
 import com.example.demo.model.User;
 import com.example.demo.service.CategoryService;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Controller
 public class TodoController {
+
     @Autowired
     private TodoService todoService;
 
@@ -51,7 +54,6 @@ public class TodoController {
         return "redirect:/todos";
     }
 
-    @Transactional
     @GetMapping("/todos")
     public String listTodos(Model model, Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
@@ -64,7 +66,11 @@ public class TodoController {
                         todo.getDueDate().format(formatter),
                         todo.isCompleted(),
                         todo.getUser().getUsername(),
-                        todo.getCategory() != null ? todo.getCategory().getName() : "No Category"))
+                        todo.getCategory() != null ? todo.getCategory().getName() : "No Category",
+                        //todo
+                        todo.getComments(),
+                        todo.getAttachments()
+                        ))
                 .collect(Collectors.toList());
 
         List<Category> categories = categoryService.findAll();
