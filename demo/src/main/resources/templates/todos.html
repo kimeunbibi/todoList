@@ -5,9 +5,12 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-<h1>To-Do List</h1>
-<div th:if="${successMessage}" th:text="${successMessage}" class="success-message"></div>
+<h1 style="text-align: center; color: #007bff; margin-top: 20px;">To-Do List</h1>
+
+<div th:if="${successMessage}" th:text="${successMessage}" class="success-message" style="max-width: 400px; margin: 20px auto; text-align: center;"></div>
+
 <form action="/todos/add" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" placeholder="Enter a new to-do" required>
@@ -26,71 +29,70 @@
             <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">Category</option>
         </select>
     </div>
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div>
         <button type="submit">Add</button>
     </div>
 </form>
-<!-- 카테고리 추가 버튼 -->
-<div>
+
+<div style="max-width: 400px; margin: 20px auto;">
     <a href="/categories" class="button">Add Category</a>
 </div>
 
-<ul>
-    <li th:each="todo : ${todos}">
+<ul style="max-width: 600px; margin: 20px auto; padding: 0;">
+    <li th:each="todo : ${todos}" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 15px; list-style: none;">
         <div>
-            <span th:text="${todo.title}"></span>
-            <span th:text="${todo.priority}"></span>
-            <span th:text="${todo.dueDate}"></span>
-            <span th:text="${todo.completed ? 'Completed' : 'Incomplete'}"></span>
-            <span th:text="${todo.username}"></span>
-            <span th:text="${todo.categoryName}"></span>
+            <span th:text="${todo.title}" style="font-weight: bold; font-size: 1.2em;"></span>
+            <span th:text="${todo.priority}" style="float: right; color: #007bff;"></span>
+            <span th:text="${todo.dueDate}" style="display: block; margin-top: 5px; color: #555;"></span>
+            <span th:text="${todo.completed ? 'Completed' : 'Incomplete'}" style="display: block; margin-top: 5px;"></span>
+            <span th:text="${todo.username}" style="display: block; font-style: italic; margin-top: 5px;"></span>
+            <span th:text="${todo.categoryName}" style="display: block; margin-top: 5px; color: #007bff;"></span>
         </div>
 
         <div>
             <!-- 댓글 출력 -->
-            <ul>
-                <li th:each="comment : ${todo.comments}">
-                    <span th:text="${comment.content}"></span>
-                    <span th:text="${comment.createdAt}"></span>
-                    <a th:href="@{/todos/{todoId}/comments/delete/{commentId}(todoId=${todo.id}, commentId=${comment.id})}">Delete</a>
+            <ul style="padding: 0; margin-top: 15px;">
+                <li th:each="comment : ${todo.comments}" style="margin-bottom: 5px; list-style: none;">
+                    <span th:text="${comment.content}" style="font-style: italic;"></span>
+                    <span th:text="${comment.createdAt}" style="margin-left: 10px; color: #95a5a6;"></span>
+                    <a th:href="@{/todos/{todoId}/comments/delete/{commentId}(todoId=${todo.id}, commentId=${comment.id})}" class="button-delete" style="margin-left: 10px;">Delete</a>
                 </li>
             </ul>
 
             <!-- 첨부파일 출력 -->
-            <ul>
-                <li th:each="attachment : ${todo.attachments}">
+            <ul style="padding: 0; margin-top: 15px;">
+                <li th:each="attachment : ${todo.attachments}" style="margin-bottom: 5px; list-style: none;">
                     <!-- 파일 다운로드 링크 -->
                     <a th:href="@{/todos/{todoId}/attachments/download/{attachmentId}(todoId=${todo.id}, attachmentId=${attachment.id})}"
-                       th:text="${attachment.fileName}">Download</a>
+                       th:text="${attachment.fileName}" style="color: #007bff;">Download</a>
                     <!-- 파일 삭제 링크 -->
-                    <a th:href="@{/todos/{todoId}/attachments/delete/{attachmentId}(todoId=${todo.id}, attachmentId=${attachment.id})}">Delete</a>
+                    <a th:href="@{/todos/{todoId}/attachments/delete/{attachmentId}(todoId=${todo.id}, attachmentId=${attachment.id})}" class="button-delete" style="margin-left: 10px;">Delete</a>
                 </li>
             </ul>
 
             <!-- 댓글 추가 폼 -->
-            <form action="#" th:action="@{/todos/{todoId}/comments/add(todoId=${todo.id})}" method="post">
-                <input type="text" name="content" placeholder="Add a comment" required>
-                <button type="submit">Add Comment</button>
+            <form action="#" th:action="@{/todos/{todoId}/comments/add(todoId=${todo.id})}" method="post" style="margin-top: 10px;">
+                <input type="text" name="content" placeholder="Add a comment" required style="width: calc(100% - 80px); padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                <button type="submit" style="width: 70px; margin-top: 10px;">Add</button>
             </form>
 
             <!-- 파일 첨부 폼 -->
-            <form action="#" th:action="@{/todos/{todoId}/attachments/add(todoId=${todo.id})}" method="post" enctype="multipart/form-data">
-                <input type="file" name="file" required>
+            <form action="#" th:action="@{/todos/{todoId}/attachments/add(todoId=${todo.id})}" method="post" enctype="multipart/form-data" style="margin-top: 10px;">
+                <input type="file" name="file" required style="margin-bottom: 10px;">
                 <button type="submit">Attach File</button>
             </form>
         </div>
 
-        <div class="actions">
-            <a th:href="@{/todos/delete/{id}(id=${todo.id})}" class="fas fa-trash">Delete</a> <!-- 삭제 버튼 -->
-            <a th:href="@{/todos/complete/{id}(id=${todo.id})}" class="fas fa-check">Complete</a> <!-- 완료 버튼 -->
+        <div class="actions" style="margin-top: 15px; text-align: right;">
+            <a th:href="@{/todos/delete/{id}(id=${todo.id})}" class="button-delete">Delete</a>
+            <a th:href="@{/todos/complete/{id}(id=${todo.id})}" style="color: #2ecc71; font-weight: bold;">Complete</a>
         </div>
     </li>
 </ul>
 
-<form action="/logout" method="post">
+<form action="/logout" method="post" style="max-width: 400px; margin: 20px auto;">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <button type="submit" class="logout">Logout</button>
+    <button type="submit" class="logout button" style="background-color: red;">Logout</button>
 </form>
 </body>
 </html>

@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,7 +74,10 @@ public class AttachmentController {
         if(!resource.exists() || !resource.isReadable()) {
             throw new IllegalArgumentException("File not found or is not readable: " + attachment.getFilePath());
         }
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + attachment.getFileName() + "\"")
+
+        String encodedFileName = URLEncoder.encode(attachment.getFileName(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + encodedFileName + "\"")
                 .body(resource);
     }
 }
